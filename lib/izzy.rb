@@ -2,14 +2,20 @@ require 'izzy/version'
 
 module Izzy
   def all_of?(*methods)
-    methods.all? { |m| respond_to?(m) && send(m) }
+    methods.all? &method(:value_if_respond_to)
   end
 
   def any_of?(*methods)
-    methods.any? { |m| respond_to?(m) && send(m) }
+    methods.any? &method(:value_if_respond_to)
   end
 
   def none_of?(*methods)
-    methods.none? { |m| respond_to?(m) && send(m) }
+    methods.none? &method(:value_if_respond_to)
+  end
+
+  private
+
+  def value_if_respond_to(method)
+    respond_to?(method) && send(method)
   end
 end
